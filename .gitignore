@@ -1,0 +1,6 @@
+.DS_Store
+/vendor
+/node_modules
+composer.lock
+package-lock.json
+/public/app.js.LICENSE.txt
