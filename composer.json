@@ -1,0 +1,58 @@
+{
+    "name": "nextbuild/activity-tracker",
+    "description": "Agent activity tracker for laravel.",
+    "keywords": ["laravel", "monitoring", "tracker"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Saptarshi Dey",
+            "email": "saptarshi7047@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "ext-json": "*",
+        "laravel/framework": "^8.37|^9.0|^10.0|^11.0",
+        "symfony/console": "^5.3|^6.0|^7.0",
+        "symfony/var-dumper": "^5.0|^6.0|^7.0",
+        "jenssegers/agent": "^2.6"
+    },
+    "require-dev": {
+        "ext-gd": "*",
+        "guzzlehttp/guzzle": "^6.0|^7.0",
+        "laravel/octane": "^1.4|^2.0|dev-develop",
+        "orchestra/testbench": "^6.40|^7.37|^8.17|^9.0",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^9.0|^10.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "NextBuild\\ActivityTracker\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "NextBuild\\ActivityTracker\\ActivityTrackerServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "post-autoload-dump": "@composer run prepare",
+        "prepare": "@php ./vendor/bin/testbench package:discover --ansi",
+        "build": [
+            "@php ./vendor/bin/testbench package:create-sqlite-db",
+            "@php ./vendor/bin/testbench activity-tracker:publish --force",
+            "@php ./vendor/bin/testbench migrate:refresh"
+        ],
+        "start": [
+            "@composer run build",
+            "@php ./vendor/bin/testbench serve"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
