@@ -3,7 +3,6 @@
 namespace NextBuild\ActivityTracker\Contracts;
 
 use Illuminate\Support\Collection;
-use NextBuild\ActivityTracker\EntryResult;
 use NextBuild\ActivityTracker\Storage\EntryQueryOptions;
 
 interface EntriesRepository
@@ -12,7 +11,6 @@ interface EntriesRepository
      * Return an entry with the given ID.
      *
      * @param  mixed  $id
-     * @return \NextBuild\ActivityTracker\EntryResult
      */
     public function find($id);
 
@@ -21,7 +19,6 @@ interface EntriesRepository
      *
      * @param  string|null  $type
      * @param  \NextBuild\ActivityTracker\Storage\EntryQueryOptions  $options
-     * @return \Illuminate\Support\Collection|\NextBuild\ActivityTracker\EntryResult[]
      */
     public function get($type, EntryQueryOptions $options);
 
@@ -36,17 +33,9 @@ interface EntriesRepository
     /**
      * Store the given entry updates and return the failed updates.
      *
-     * @param  \Illuminate\Support\Collection|\NextBuild\ActivityTracker\EntryUpdate[]  $updates
      * @return \Illuminate\Support\Collection|null
      */
     public function update(Collection $updates);
-
-    /**
-     * Load the monitored tags from storage.
-     *
-     * @return void
-     */
-    public function loadMonitoredTags();
 
     /**
      * Determine if any of the given tags are currently being monitored.

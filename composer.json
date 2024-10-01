@@ -1,6 +1,6 @@
 {
     "name": "nextbuild/activity-tracker",
-    "description": "Agent activity tracker for laravel.",
+    "description": "A Laravel package for tracking user activity",
     "keywords": ["laravel", "monitoring", "tracker"],
     "license": "MIT",
     "authors": [

@@ -59,26 +59,10 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
      */
     public function find($id)
     {
-        // $entry = EntryModel::on($this->connection)->whereUuid($id)->firstOrFail();
+        $entry = VisitorIpModel::on($this->connection)
+        ->whereUuid($id)->firstOrFail();
 
-        // $tags = $this->table('telescope_entries_tags')
-        //                 ->where('entry_uuid', $id)
-        //                 ->pluck('tag')
-        //                 ->all();
-
-        // return new EntryResult(
-        //     $entry->uuid,
-        //     null,
-        //     $entry->batch_id,
-        //     $entry->type,
-        //     $entry->family_hash,
-        //     $entry->content,
-        //     $entry->created_at,
-        //     $tags
-        // );
-
-        $entry = VisitorIpModel::on($this->connection)->whereUuid($id)->firstOrFail();
-        return $entry;
+        return response()->json($entry, 200);
     }
 
     /**
@@ -90,31 +74,7 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
      */
     public function get($type, EntryQueryOptions $options)
     {
-        // return [$type, $options];
-        // return EntryModel::on($this->connection)
-        //     ->withTelescopeOptions($type, $options)
-        //     ->take($options->limit)
-        //     ->orderByDesc('sequence')
-        //     ->get()
-        //     ->reject(function ($entry) {
-        //         return ! is_array($entry->content);
-        //     })->map(function ($entry) {
-        //         return $entry;
-        //         // return new EntryResult(
-        //         //     $entry->uuid,
-        //         //     $entry->sequence,
-        //         //     $entry->batch_id,
-        //         //     $entry->ip,
-        //         //     $entry->type,
-        //         //     $entry->family_hash,
-        //         //     $entry->content,
-        //         //     $entry->created_at,
-        //         //     []
-        //         // );
-        //     })->values();
-
         return VisitorIpModel::on($this->connection)
-            // ->withTelescopeOptions($type, $options)
             ->take($options->limit)
             ->orderByDesc('id')
             ->get()
@@ -127,105 +87,8 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
     }
 
     /**
-     * Counts the occurences of an exception.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $exception
-     * @return int
-     */
-    protected function countExceptionOccurences(IncomingEntry $exception)
-    {
-        return $this->table('telescope_entries')
-                    ->where('type', EntryType::EXCEPTION)
-                    ->where('family_hash', $exception->familyHash())
-                    ->count();
-    }
-
-    /**
-     * Store the given array of entries.
-     *
-     * @param  \Illuminate\Support\Collection|\NextBuild\ActivityTracker\IncomingEntry[]  $entries
-     * @return void
-     */
-    public function store(Collection $entries)
-    {
-        if ($entries->isEmpty()) {
-            return;
-        }
-
-        [$exceptions, $entries] = $entries->partition->isException();
-
-        $this->storeExceptions($exceptions);
-
-        $table = $this->table('telescope_entries');
-
-        $entries->chunk($this->chunkSize)->each(function ($chunked) use ($table) {
-            $table->insert($chunked->map(function ($entry) {
-                $entry->content = json_encode($entry->content, JSON_INVALID_UTF8_SUBSTITUTE);
-
-                return $entry->toArray();
-            })->toArray());
-        });
-
-        $this->storeTags($entries->pluck('tags', 'uuid'));
-    }
-
-    /**
-     * Store the given array of exception entries.
-     *
-     * @param  \Illuminate\Support\Collection|\NextBuild\ActivityTracker\IncomingEntry[]  $exceptions
-     * @return void
-     */
-    protected function storeExceptions(Collection $exceptions)
-    {
-        $exceptions->chunk($this->chunkSize)->each(function ($chunked) {
-            $this->table('telescope_entries')->insert($chunked->map(function ($exception) {
-                $occurrences = $this->countExceptionOccurences($exception);
-
-                $this->table('telescope_entries')
-                        ->where('type', EntryType::EXCEPTION)
-                        ->where('family_hash', $exception->familyHash())
-                        ->update(['should_display_on_index' => false]);
-
-                return array_merge($exception->toArray(), [
-                    'family_hash' => $exception->familyHash(),
-                    'content' => json_encode(array_merge(
-                        $exception->content, ['occurrences' => $occurrences + 1]
-                    )),
-                ]);
-            })->toArray());
-        });
-
-        $this->storeTags($exceptions->pluck('tags', 'uuid'));
-    }
-
-    /**
-     * Store the tags for the given entries.
-     *
-     * @param  \Illuminate\Support\Collection  $results
-     * @return void
-     */
-    protected function storeTags(Collection $results)
-    {
-        $results->chunk($this->chunkSize)->each(function ($chunked) {
-            try {
-                $this->table('telescope_entries_tags')->insert($chunked->flatMap(function ($tags, $uuid) {
-                    return collect($tags)->map(function ($tag) use ($uuid) {
-                        return [
-                            'entry_uuid' => $uuid,
-                            'tag' => $tag,
-                        ];
-                    });
-                })->all());
-            } catch (UniqueConstraintViolationException $e) {
-                // Ignore tags that already exist...
-            }
-        });
-    }
-
-    /**
      * Store the given entry updates and return the failed updates.
      *
-     * @param  \Illuminate\Support\Collection|\NextBuild\ActivityTracker\EntryUpdate[]  $updates
      * @return \Illuminate\Support\Collection|null
      */
     public function update(Collection $updates)
@@ -253,55 +116,10 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
                             ->where('type', $update->type)
                             ->update(['content' => $content]);
 
-            $this->updateTags($update);
+            // $this->updateTags($update);
         }
 
         return collect($failedUpdates);
-    }
-
-    /**
-     * Update tags of the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\EntryUpdate  $entry
-     * @return void
-     */
-    protected function updateTags($entry)
-    {
-        if (! empty($entry->tagsChanges['added'])) {
-            try {
-                $this->table('telescope_entries_tags')->insert(
-                    collect($entry->tagsChanges['added'])->map(function ($tag) use ($entry) {
-                        return [
-                            'entry_uuid' => $entry->uuid,
-                            'tag' => $tag,
-                        ];
-                    })->toArray()
-                );
-            } catch (UniqueConstraintViolationException $e) {
-                // Ignore tags that already exist...
-            }
-        }
-
-        collect($entry->tagsChanges['removed'])->each(function ($tag) use ($entry) {
-            $this->table('telescope_entries_tags')->where([
-                'entry_uuid' => $entry->uuid,
-                'tag' => $tag,
-            ])->delete();
-        });
-    }
-
-    /**
-     * Load the monitored tags from storage.
-     *
-     * @return void
-     */
-    public function loadMonitoredTags()
-    {
-        try {
-            $this->monitoredTags = $this->monitoring();
-        } catch (\Throwable $e) {
-            $this->monitoredTags = [];
-        }
     }
 
     /**
@@ -312,10 +130,6 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
      */
     public function isMonitoring(array $tags)
     {
-        if (is_null($this->monitoredTags)) {
-            $this->loadMonitoredTags();
-        }
-
         return count(array_intersect($tags, $this->monitoredTags)) > 0;
     }
 

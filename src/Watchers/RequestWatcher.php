@@ -113,22 +113,6 @@ class RequestWatcher extends Watcher
             ],
             'created_at' => \Carbon\Carbon::now(),
         ]);
-
-        // ActivityTracker::recordRequest(IncomingEntry::make([
-        //     'ip_address' => $event->request->ip(),
-        //     'uri' => str_replace($event->request->root(), '', $event->request->fullUrl()) ?: '/',
-        //     'method' => $event->request->method(),
-        //     'controller_action' => optional($event->request->route())->getActionName(),
-        //     'middleware' => array_values(optional($event->request->route())->gatherMiddleware() ?? []),
-        //     'headers' => $this->headers($event->request->headers->all()),
-        //     'payload' => $this->payload($this->input($event->request)),
-        //     'session' => $this->payload($this->sessionVariables($event->request)),
-        //     'response_status' => $event->response->getStatusCode(),
-        //     'response' => $this->response($event->response),
-        //     'duration' => $startTime ? floor((microtime(true) - $startTime) * 1000) : null,
-        //     'memory' => round(memory_get_peak_usage(true) / 1024 / 1024, 1),
-        // ]));
-
     }
 
     protected function clientContent()

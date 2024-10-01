@@ -83,11 +83,7 @@ class IncomingEntry
 
         $this->recordedAt = now();
 
-        // $this->ip = $content['ip_address'] ?? '127.0.0.1';
-
         $this->content = array_merge($content, ['hostname' => gethostname()]);
-
-        // $this->tags = ['hostname:'.gethostname()];
     }
 
     /**
@@ -163,11 +159,6 @@ class IncomingEntry
         return $this;
     }
 
-    // public function ip()
-    // {
-    //     $this->content()
-    // }
-
     /**
      * Merge tags into the entry's existing tags.
      *
@@ -217,57 +208,6 @@ class IncomingEntry
     }
 
     /**
-     * Determine if the incoming entry is a query.
-     *
-     * @return bool
-     */
-    public function isQuery()
-    {
-        return $this->type === EntryType::QUERY;
-    }
-
-    /**
-     * Determine if the incoming entry is a slow query.
-     *
-     * @return bool
-     */
-    public function isSlowQuery()
-    {
-        return $this->type === EntryType::QUERY && ($this->content['slow'] ?? false);
-    }
-
-    /**
-     * Determine if the incoming entry is an authorization gate check.
-     *
-     * @return bool
-     */
-    public function isGate()
-    {
-        return $this->type === EntryType::GATE;
-    }
-
-    /**
-     * Determine if the incoming entry is a failed job.
-     *
-     * @return bool
-     */
-    public function isFailedJob()
-    {
-        return $this->type === EntryType::JOB &&
-               ($this->content['status'] ?? null) === 'failed';
-    }
-
-    /**
-     * Determine if the incoming entry is a reportable exception.
-     *
-     * @return bool
-     */
-    public function isReportableException()
-    {
-        return false;
-    }
-
-    /**
      * Determine if the incoming entry is an exception.
      *
      * @return bool
@@ -285,36 +225,6 @@ class IncomingEntry
     public function isDump()
     {
         return false;
-    }
-
-    /**
-     * Determine if the incoming entry is a log entry.
-     *
-     * @return bool
-     */
-    public function isLog()
-    {
-        return $this->type === EntryType::LOG;
-    }
-
-    /**
-     * Determine if the incoming entry is a scheduled task.
-     *
-     * @return bool
-     */
-    public function isScheduledTask()
-    {
-        return $this->type === EntryType::SCHEDULED_TASK;
-    }
-
-    /**
-     * Determine if the incoming entry is an client request.
-     *
-     * @return bool
-     */
-    public function isClientRequest()
-    {
-        return $this->type === EntryType::CLIENT_REQUEST;
     }
 
     /**

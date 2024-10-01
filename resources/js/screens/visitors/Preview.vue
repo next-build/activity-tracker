@@ -157,8 +157,7 @@
                 {{ data.item.content?.response_status }}
             </template>
             <template #created_at="data">
-                <!-- {{ dateFormat(data.item.created_at, "hh:MM:ss TT, mm-dd-yyyy") }} -->
-                {{ dateFormat(data.item.created_at, "mmmm dS yyyy, hh:MM:ss TT") }}
+                {{ timeAgo(data.item.created_at) }}
             </template>
             <template #action="data">
                 <router-link :to="`/visitors/${entry.uuid}/requests/${data.item.uuid}`">
@@ -180,6 +179,7 @@ import Tab from '@/components/Tab.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 import dateFormat, { masks } from "dateformat";
+import { timeAgo } from '@/base.js';
 
 import {
     ArrowRightCircleIcon,

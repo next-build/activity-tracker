@@ -138,7 +138,7 @@ class ActivityTracker
             (static::runningApprovedArtisanCommand($app) ||
             static::handlingApprovedRequest($app))
         ) {
-            static::startRecording($loadMonitoredTags = false);
+            static::startRecording();
         }
     }
 
@@ -238,15 +238,10 @@ class ActivityTracker
     /**
      * Start recording entries.
      *
-     * @param  bool  $loadMonitoredTags
      * @return void
      */
-    public static function startRecording($loadMonitoredTags = true)
+    public static function startRecording()
     {
-        if ($loadMonitoredTags) {
-            app(EntriesRepository::class)->loadMonitoredTags();
-        }
-
         $recordingPaused = false;
 
         try {
@@ -336,173 +331,6 @@ class ActivityTracker
     }
 
     /**
-     * Record the given entry update.
-     *
-     * @param  \NextBuild\ActivityTracker\EntryUpdate  $update
-     * @return void
-     */
-    public static function recordUpdate(EntryUpdate $update)
-    {
-        if (static::$shouldRecord) {
-            static::$updatesQueue[] = $update;
-        }
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordBatch($entry)
-    {
-        static::record(EntryType::BATCH, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordCache(IncomingEntry $entry)
-    {
-        static::record(EntryType::CACHE, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordCommand(IncomingEntry $entry)
-    {
-        static::record(EntryType::COMMAND, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordDump(IncomingEntry $entry)
-    {
-        static::record(EntryType::DUMP, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordEvent(IncomingEntry $entry)
-    {
-        static::record(EntryType::EVENT, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordException(IncomingEntry $entry)
-    {
-        static::record(EntryType::EXCEPTION, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordGate(IncomingEntry $entry)
-    {
-        static::record(EntryType::GATE, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordJob($entry)
-    {
-        static::record(EntryType::JOB, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordLog(IncomingEntry $entry)
-    {
-        static::record(EntryType::LOG, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordMail(IncomingEntry $entry)
-    {
-        static::record(EntryType::MAIL, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordNotification($entry)
-    {
-        static::record(EntryType::NOTIFICATION, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordQuery(IncomingEntry $entry)
-    {
-        static::record(EntryType::QUERY, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordModelEvent(IncomingEntry $entry)
-    {
-        static::record(EntryType::MODEL, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordRedis(IncomingEntry $entry)
-    {
-        static::record(EntryType::REDIS, $entry);
-    }
-
-    /**
      * Record the given entry.
      *
      * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
@@ -511,39 +339,6 @@ class ActivityTracker
     public static function recordRequest(IncomingEntry $entry)
     {
         static::record(EntryType::REQUEST, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordScheduledCommand(IncomingEntry $entry)
-    {
-        static::record(EntryType::SCHEDULED_TASK, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordView(IncomingEntry $entry)
-    {
-        static::record(EntryType::VIEW, $entry);
-    }
-
-    /**
-     * Record the given entry.
-     *
-     * @param  \NextBuild\ActivityTracker\IncomingEntry  $entry
-     * @return void
-     */
-    public static function recordClientRequest(IncomingEntry $entry)
-    {
-        static::record(EntryType::CLIENT_REQUEST, $entry);
     }
 
     /**
@@ -786,12 +581,12 @@ class ActivityTracker
      * @param  \Closure  $callback
      * @return static
      */
-    public static function avatar(Closure $callback)
-    {
-        Avatar::register($callback);
+    // public static function avatar(Closure $callback)
+    // {
+    //     Avatar::register($callback);
 
-        return new static;
-    }
+    //     return new static;
+    // }
 
     /**
      * Get the default JavaScript variables for Activity Tracker.
