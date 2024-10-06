@@ -13,11 +13,11 @@
 </p>
 
 <p align="center">
-<a href="https://packagist.org/packages/nextbuild/activity-tracker"><img src="https://img.shields.io/packagist/v/nextbuild/database-viewer.svg?style=flat-square" alt="Packagist"></a>
+<a href="https://packagist.org/packages/nextbuild/activity-tracker"><img src="https://img.shields.io/packagist/v/nextbuild/activity-tracker.svg?style=flat-square" alt="Packagist"></a>
 <a href="https://packagist.org/packages/nextbuild/activity-tracker"><img src="https://img.shields.io/badge/Laravel-8.x,%209.x,%2010.x,%2011.x-brightgreen.svg?style=flat-square" alt="Laravel Version"></a>
 </p>
 
-<!-- ![database-viewer-banner](https://img.playbook.com/JIRPzflC6tGrWdRlcszNkvDN-Rv1jD7yirlcexcOhpA/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljLzRlZTc5MWVm/LTk3MzItNDVkYi1h/YTU5LWRiOTQzNTFk/OTVjOA) -->
+<!-- ![activity-tracker-banner](https://img.playbook.com/JIRPzflC6tGrWdRlcszNkvDN-Rv1jD7yirlcexcOhpA/Z3M6Ly9wbGF5Ym9v/ay1hc3NldHMtcHVi/bGljLzRlZTc5MWVm/LTk3MzItNDVkYi1h/YTU5LWRiOTQzNTFk/OTVjOA) -->
 
 ### Documentation
 
