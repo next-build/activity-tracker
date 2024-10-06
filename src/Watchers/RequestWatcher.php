@@ -57,8 +57,8 @@ class RequestWatcher extends Watcher
 
         $startTime = defined('LARAVEL_START') ? LARAVEL_START : $event->request->server('REQUEST_TIME_FLOAT');
 
-        // $ip = $event->request->ip();
-        $ip = '216.57.45.241';
+        $ip = $event->request->ip();
+        // $ip = '216.57.45.241';
 
         $visitor_ip = VisitorIpModel::where('ip_address', $ip)->first();
         if (!$visitor_ip) {
