@@ -18,11 +18,13 @@ const loadEntries = () => {
     axios.get(ActivityTracker.basePath + '/activity-tracker-api/requests')
     .then(response => {
         response.data.entries.forEach(entry => {
-            markers.value.push({
-                lat: entry.content.latitude,
-                lng: entry.content.longitude,
-                popupText: entry.ip_address,
-            });
+            if (entry.content.latitude && entry.content.latitude) {
+                markers.value.push({
+                    lat: entry.content.latitude,
+                    lng: entry.content.longitude,
+                    popupText: entry.ip_address,
+                });
+            }
         });
     }).catch(error => {})
 }

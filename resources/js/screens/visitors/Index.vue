@@ -6,7 +6,7 @@
             :items="entries"
         >
             <template #country="data">
-                {{ data.item.content?.country }}
+                {{ data.item.content?.country ?? 'N/A' }}
             </template>
             <template #device="data">
                 {{ data.item.content?.device }} ({{ data.item.content?.platform }})

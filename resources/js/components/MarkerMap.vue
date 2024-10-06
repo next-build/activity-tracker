@@ -1,6 +1,6 @@
 <template>
-    <div 
-        id="map" 
+    <div
+        id="map"
         class="!z-0"
         :class="customClass"
     ></div>

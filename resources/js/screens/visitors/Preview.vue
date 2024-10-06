@@ -1,10 +1,28 @@
 <template>
     <div class="flex flex-col gap-8" v-if="entry">
+
+        <div
+            class="rounded-md bg-blue-50 p-4 border border-blue-100"
+            v-if="entry.ip_address.includes('127.0.0.1')"
+        >
+            <div class="flex">
+            <div class="flex-shrink-0">
+                <InformationCircleIcon class="h-5 w-5 text-blue-400" aria-hidden="true" />
+            </div>
+            <div class="ml-3 flex-1 md:flex md:justify-between">
+                <p class="text-sm text-blue-700">
+                    IP details aren't available in the development environment.
+                </p>
+            </div>
+            </div>
+        </div>
+
         <div class="flex flex-row gap-8">
             <MarkerMap
                 customClass="flex-1 !h-auto !rounded-md !shadow"
-                :latitude="entry?.content?.latitude" :longitude="entry?.content?.longitude"
-                :popupText="entry?.ip_address" zoom="8"
+                :latitude="entry.content.latitude ?? 0.00"
+                :longitude="entry.content.longitude ?? 0.00"
+                :popupText="entry.ip_address" zoom="8"
             />
 
             <!-- <div class="flex-1 rounded-md shadow">
@@ -62,23 +80,23 @@
                         </div> -->
                         <div class="flex flex-row flex-1">
                             <p class="flex-1 text-base">Timezone</p>
-                            <p class="flex-1 text-base">{{ entry?.timezone }}</p>
+                            <p class="flex-1 text-base">{{ entry.timezone ?? 'N/A' }}</p>
                         </div>
                         <div class="flex flex-row flex-1">
                             <p class="flex-1 text-base">City</p>
-                            <p class="flex-1 text-base">{{ entry?.content?.city }}</p>
+                            <p class="flex-1 text-base">{{ entry.content.city ?? 'N/A' }}</p>
                         </div>
                         <div class="flex flex-row flex-1">
                             <p class="flex-1 text-base">Zip Code</p>
-                            <p class="flex-1 text-base">{{ entry?.content?.zip }}</p>
+                            <p class="flex-1 text-base">{{ entry.content.zip ?? 'N/A' }}</p>
                         </div>
                         <div class="flex flex-row flex-1">
                             <p class="flex-1 text-base">Region</p>
-                            <p class="flex-1 text-base">{{ entry?.content?.regionName }}</p>
+                            <p class="flex-1 text-base">{{ entry.content.regionName ?? 'N/A' }}</p>
                         </div>
                         <div class="flex flex-row flex-1">
                             <p class="flex-1 text-base">Country</p>
-                            <p class="flex-1 text-base">{{ entry?.content?.country }}</p>
+                            <p class="flex-1 text-base">{{ entry.content.country ?? 'N/A' }}</p>
                         </div>
                     </div>
                 </template>
@@ -88,23 +106,23 @@
                     <div class="flex flex-col gap-4 px-6 py-4">
                         <div class="flex flex-row">
                             <p class="flex-1 text-base">Device</p>
-                            <p class="flex-1 text-base">{{ entry?.content?.device }}</p>
+                            <p class="flex-1 text-base">{{ entry.content.device ?? 'N/A' }}</p>
                         </div>
                         <div class="flex flex-row">
                             <p class="flex-1 text-base">Platform</p>
-                            <p class="flex-1 text-base">{{ entry?.content?.platform }}</p>
+                            <p class="flex-1 text-base">{{ entry.content.platform ?? 'N/A' }}</p>
                         </div>
                         <div class="flex flex-row">
                             <p class="flex-1 text-base">Platform Version</p>
-                            <p class="flex-1 text-base">{{ entry?.content?.platformVersion }}</p>
+                            <p class="flex-1 text-base">{{ entry.content.platformVersion ?? 'N/A' }}</p>
                         </div>
                         <div class="flex flex-row">
                             <p class="flex-1 text-base">Browser</p>
-                            <p class="flex-1 text-base">{{ entry?.content?.browser }}</p>
+                            <p class="flex-1 text-base">{{ entry.content.browser ?? 'N/A' }}</p>
                         </div>
                         <div class="flex flex-row">
                             <p class="flex-1 text-base">Browser Version</p>
-                            <p class="flex-1 text-base">{{ entry?.content?.browserVersion }}</p>
+                            <p class="flex-1 text-base">{{ entry.content.browserVersion ?? 'N/A' }}</p>
                         </div>
                     </div>
 
@@ -178,12 +196,12 @@ import MarkerMap from '@/components/MarkerMap.vue';
 import Tab from '@/components/Tab.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
-import dateFormat, { masks } from "dateformat";
 import { timeAgo } from '@/base.js';
 
 import {
     ArrowRightCircleIcon,
 } from '@heroicons/vue/24/outline';
+import { InformationCircleIcon } from '@heroicons/vue/20/solid';
 
 const route = useRoute();
 

@@ -14,6 +14,8 @@ return [
     | of their individual configuration, which simply provides a single
     | and convenient way to enable or disable Activity Tracker data storage.
     |
+    | Suggestion: For local development you can disable this switch.
+    |
     */
 
     'enabled' => env('ACTIVITY_TRACKER_ENABLED', true),
@@ -117,6 +119,7 @@ return [
         'livewire*',
         'nova-api*',
         'pulse*',
+        'telescope*',
     ],
 
     'ignore_http_methods' => [

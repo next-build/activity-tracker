@@ -69,17 +69,17 @@ class RequestWatcher extends Watcher
             $visitor_ip = VisitorIpModel::create([
                 'uuid' => \Str::uuid(),
                 'ip_address' => $ip,
-                'timezone' => $ip_details['timezone'],
-                'country_code' => $ip_details['countryCode'],
+                'timezone' => $ip_details['timezone'] ?? null,
+                'country_code' => $ip_details['countryCode'] ?? null,
                 'content' => [
 
-                    'country' => $ip_details['country'],
-                    'region' => $ip_details['region'],
-                    'regionName' => $ip_details['regionName'],
-                    'city' => $ip_details['city'],
-                    'zip' => $ip_details['zip'],
-                    'latitude' => $ip_details['lat'],
-                    'longitude' => $ip_details['lon'],
+                    'country' => $ip_details['country'] ?? null,
+                    'region' => $ip_details['region'] ?? null,
+                    'regionName' => $ip_details['regionName'] ?? null,
+                    'city' => $ip_details['city'] ?? null,
+                    'zip' => $ip_details['zip'] ?? null,
+                    'latitude' => $ip_details['lat'] ?? null,
+                    'longitude' => $ip_details['lon'] ?? null,
 
                     'device' => $agent->device(),
                     'platform' => $agent->platform(),
